@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% load static %}
+
+{% block title %} | {{ listing.name }} {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">{{ listing.name }}</h1>
+          <p class="lead">
+            <i class="fas fa-map-marker"></i> {{ listing.movie_type }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="{% url 'listings' %}">Movie Listings</a>
+          </li>
+          <li class="breadcrumb-item active">{{ listing.name }}</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Alerts -->
+  {% include 'partials/_alerts.html' %}
+
+  <!-- Listing -->
+  <section id="listing" class="py-4">
+    <div class="container">
+      <!-- <a href="{% url 'listings' %}" class="btn btn-light mb-4">Donation Requests Listings</a> -->
+      <div class="row">
+        <div class="col-md-9">
+          {% if listing.photo %}
+          <!-- Home Main Image -->
+            <img src="{{ listing.photo.url }}" alt="" width="200" height="200">
+          {% else %}
+            <img src="{% static 'img/default.png' %}" alt="" width="200" height="200">
+          {% endif %}
+          <!-- Thumbnails -->
+          <!-- Fields -->
+          <div class="row mb-5 fields">
+            <div class="col-md-12">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item text-secondary">
+                  <i class="fa fa-tint" aria-hidden="true"></i> Popularity:
+                  <span class="float-right">{{ listing.popularity }}</span>
+                </li>
+                <li class="list-group-item text-secondary">
+                  <i class="fas fa-bed"></i> Movie Type:
+                  <span class="float-right">{{ listing.movie_type }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item text-secondary">
+                  <i class="fas fa-calendar"></i> Listing Date:
+                  <span class="float-right">{{ listing.created | timesince }}</span>
+                </li>
+                <li class="list-group-item text-secondary">
+                    <i class="fas fa-hospital"></i> Genre:
+                    <span class="float-right">{{ listing.genre }}
+                    </span>
+                  </li>
+                <li class="list-group-item text-secondary">
+                  <i class="fa fa-audio-description" aria-hidden="true"> Maximum Age:
+                    {% if listing.maximum_age %}
+                    <span class="float-right">{{ listing.maximum_age }}</span>
+                    {% endif %}
+                  </i>  
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+                <ul class="list-group list-group-flush">
+                <li class="list-group-item text-secondary">
+                <i class="fa fa-audio-description" aria-hidden="true"> Description:
+                    {% if listing.description %}
+                    <span class="float-right">{{ listing.description }}</span>
+                    {% endif %}
+                  </i>
+                </li>
+                </ul>
+            </div>
+          </div>
+          <button class="btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal">Rent the movie</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inquiry Modal -->
+  <div class="modal fade" id="inquiryModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inquiryModalLabel">Rent the movie</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'rent' %}" method="POST">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+              <input type="hidden" name="user_id" value="{{ user.id }}">
+            {% else %}
+              <input type="hidden" name="user_id" value="0">
+            {% endif %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <div class="form-group">
+              <label for="movie" class="col-form-label">Movie:</label>
+              <input type="text" name="listing" class="form-control" value="{{ listing.name }}">
+            </div>
+            <div class="form-group">
+              <label for="start_date" class="col-form-label">Start Date:</label>
+              <input type="date" name="start_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="end_date" class="col-form-label">End Date:</label>
+              <input type="date" name="end_date" class="form-control" required>
+            </div>
+            <hr>
+            <input type="submit" value="Send" class="btn btn-block btn-secondary">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

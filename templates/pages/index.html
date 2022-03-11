@@ -1,0 +1,145 @@
+{% extends 'base.html' %} 
+
+{% load humanize %}
+
+{% load static %}
+
+{% block title %} | Welcome {% endblock %}
+
+{% block content %}
+<!-- Showcase -->
+<section id="showcase">
+    <div class="container text-center">
+      <div class="home-search p-5">
+        <div class="overlay p-5">
+          <h1 class="display-4 mb-4">
+            A Premier Movie Renting Portal
+          </h1>
+          <p class="lead">
+            This portal allows you to get the best movies in 4 clicks of a mouse.
+          </p>
+          <div class="search">
+            <form action="{% url 'search' %}">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                <div class="col-md-12 mb-3">
+                  <label class="sr-only">Location</label>
+                  <input type="text" name="keywords" class="form-control" placeholder="Movie Details">
+                </div>
+              </div>
+              <!-- Form Row 2 -->
+              <div class="form-row">
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Movie Type</label>
+                  <select name="genre" class="form-control">
+                    <option selected="true" disabled="disabled">Genre (Any)</option>
+                    {% for key,value in genre %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <select name="movie_type" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Movie Type(All)</option>
+                    {% for key,value in movie_types %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block mt-4" type="submit">Submit form</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<br>
+  <!-- Alerts -->
+  {% include 'partials/_alerts.html' %}
+
+  <!-- Listings -->
+  <section id="listings" class="py-5">
+    <div class="container">
+      <h3 class="text-center mb-3">Latest Movie Listings</h3>
+      <div class="row">
+        {% if listings %}
+          {% for listing in listings %}
+            <!-- Listing 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                {% if listing.photo %}
+                  <img class="card-img-top" src="{{ listing.photo.url }}" alt="" width="200" height="200">
+                {% else %}
+                  <img src="{% static 'img/default.png' %}" alt="" width="200" height="200">
+                {% endif %}
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">{{ listing.popularity }}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ listing.name }}</h4>
+                    <p>
+                      <i class="fas fa-map-marker text-secondary"></i> {{ listing.genre }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-th-large"></i> Year of Release: {{ listing.year_released }}</div>
+                    <div class="col-12">
+                      <i class="fa fa-tint" aria-hidden="true"></i> Movie Type: {{ listing.movie_type }}</div>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-hospital"></i> {{ listing.name }}</div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-12">
+                      <i class="fas fa-clock"></i> {{ listing.created | timesince }} ago</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12 text-center mb-3">
+            <p>No Listings Available</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="py-5 bg-secondary text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4">
+          <i class="fas fa-comments fa-4x mr-4"></i>
+          <hr>
+          <h3>Which movies are the buzz</h3>
+          <p>Find all the top movies everyone is talking about.</p>
+        </div>
+        <div class="col-md-4">
+          <i class="fas fa-fighter-jet fa-4x mr-4"></i>
+          <hr>
+          <h3>Fast search</h3>
+          <p>Rent a movie of your choice fast and within 4 clicks.</p>
+        </div>
+        <div class="col-md-4">
+          <i class="fas fa-binoculars fa-4x mr-4"></i>
+          <hr>
+          <h3>Check out all the cool genres</h3>
+          <p>All enthusiasts are welcome with access to horror, action, drama
+            and several other genres for you to check out.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

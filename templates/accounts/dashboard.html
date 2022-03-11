@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %} | User Dashboard {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">User Dashboard</h1>
+          <p class="lead">Manage your BDSG account</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> Dashboard</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Alerts -->
+  {% include 'partials/_alerts.html' %}
+
+  <section class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Welcome {{ user.first_name }}</h2>
+
+          {% if rental_requests %}
+            <p>Here are the movie rental requests listings that you have created an appointment for</p>
+            <div style="overflow-x:auto;">
+            <table class="content-table col-md-11">
+              <thead>
+                <tr>
+                  <th scope="col">Movie</th>
+                  <th scope="col">start Date</th>
+                  <th scope="col">End Date</th>
+                  <th scope="col">Total Amount</th>
+                  <th scope="col">status</th>
+                  <th scope="col">Action</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for rental_request in rental_requests %}
+                  <tr>
+                    <td>{{ rental_request.movie.name }}</td>
+                    <td>{{ rental_request.start_date }}</td>
+                    <td>{{ rental_request.end_date }}</td>
+                    <td>{{ rental_request.total_amount }}</td>
+                    <td>{{ rental_request.status }}</td>
+                    <td>
+                      <a class="btn btn-primary btn-block" href="{% url 'listing' rental_request.movie.id %}">View Movie Details</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            </div>
+          {% else %}
+            <p>You have not made any rental requests</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}
