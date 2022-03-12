@@ -5,8 +5,10 @@ branca==0.4.2
 certifi==2021.10.8
 charset-normalizer==2.0.12
 decorator==5.1.1
+dj-database-url==0.5.0
 Django==3.2
 django-google-maps==0.12.4
+django-heroku==0.3.1
 django-phonenumber-field==6.1.0
 executing==0.8.3
 folium==0.11.0
@@ -39,3 +41,4 @@ traitlets==5.1.1
 twilio==6.41.0
 urllib3==1.26.8
 wcwidth==0.2.5
+whitenoise==6.0.0

@@ -157,3 +157,5 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY', '')
 PHONENUMBER_DB_FORMAT = 'E164'
+import django_heroku
+django_heroku.settings(locals())
