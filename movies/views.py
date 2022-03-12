@@ -1,4 +1,5 @@
 from dateutil.parser import parse
+from decimal import Decimal
 from tracemalloc import start
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
@@ -87,16 +88,17 @@ def get_total_amount(start_date, end_date, movie):
   end_date = parse(end_date).date()
   movie_type = movie.movie_type
   rental_rate = RentalRate.objects.get(movie_type=movie_type)
-  total_days = (end_date - start_date).days
+  total_days = Decimal((end_date - start_date).days)
   if movie_type == 'REGULAR':
     total_amount = total_days * rental_rate.daily_rate
   elif movie_type == 'CHILDREN':
     total_amount = (total_days * rental_rate.daily_rate) + movie.maximum_age/2
   elif movie_type == 'NEW_RELEASE':
-    release_year = movie.year_released.strftime("%Y-%m-%d").split('-')[0]
+    release_year = Decimal(
+      movie.year_released.strftime("%Y-%m-%d").split('-')[0])
     total_amount = (total_days * rental_rate.daily_rate) + release_year
   else:
-    total_amount = 0
+    total_amount = Decimal(0)
   return total_amount
 
 
