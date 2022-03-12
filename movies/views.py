@@ -92,7 +92,7 @@ def get_total_amount(start_date, end_date, movie):
   if movie_type == 'REGULAR':
     total_amount = total_days * rental_rate.daily_rate
   elif movie_type == 'CHILDREN':
-    total_amount = (total_days * rental_rate.daily_rate) + movie.maximum_age/2
+    total_amount = (total_days * rental_rate.daily_rate) + (movie.maximum_age/2)
   elif movie_type == 'NEW_RELEASE':
     release_year = Decimal(
       movie.year_released.strftime("%Y-%m-%d").split('-')[0])
